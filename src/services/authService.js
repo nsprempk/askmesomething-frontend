@@ -62,3 +62,14 @@ export const resetPassword = async (token, password) => {
 
   return response.data;
 };
+
+// Delete account
+export const deleteAccount = async (password) => {
+  const response = await api.delete("/auth/delete-account", {
+    data: {
+      password,
+    },
+  });
+
+  return response.data;
+};

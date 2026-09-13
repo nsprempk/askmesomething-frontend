@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
+import { deleteAccount as deleteAccountRequest } from "../services/authService.js";
 import api from "../services/api.js";
 
 const AuthContext = createContext(null);
@@ -30,7 +31,7 @@ export const AuthProvider = ({ children }) => {
   // ==========================================
   // REGISTER
   // ==========================================
-  // Registration now sends OTP.
+  // Registration sends OTP.
   // User is NOT logged in until OTP verification.
 
   const register = async (name, email, password) => {
@@ -60,6 +61,22 @@ export const AuthProvider = ({ children }) => {
     setUser(user);
 
     return response.data;
+  };
+
+  // ==========================================
+  // DELETE ACCOUNT
+  // ==========================================
+
+  const deleteAccount = async (password) => {
+    const response = await deleteAccountRequest(password);
+
+    // Remove authentication token
+    localStorage.removeItem("token");
+
+    // Clear current user
+    setUser(null);
+
+    return response;
   };
 
   // ==========================================
@@ -112,14 +129,22 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
+
     login,
     register,
     verifyEmail,
+
+    deleteAccount,
+
     logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+// ==========================================
+// USE AUTH
+// ==========================================
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
