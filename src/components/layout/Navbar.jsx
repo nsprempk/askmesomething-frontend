@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import { Menu, X, Sparkles, LogIn, UserPlus } from "lucide-react";
+import { Menu, X, Sparkles, LogIn, UserPlus, UserCircle } from "lucide-react";
 import { useState } from "react";
 
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -49,9 +49,15 @@ const Navbar = () => {
           </NavLink>
 
           {user && (
-            <NavLink to="/dashboard" className={navLinkClass}>
-              Dashboard
-            </NavLink>
+            <>
+              <NavLink to="/dashboard" className={navLinkClass}>
+                Dashboard
+              </NavLink>
+
+              <NavLink to="/profile" className={navLinkClass}>
+                Profile
+              </NavLink>
+            </>
           )}
 
           <NavLink to="/contact" className={navLinkClass}>
@@ -103,6 +109,7 @@ const Navbar = () => {
           onClick={() => setMobileOpen(!mobileOpen)}
           className="rounded-lg p-2 text-slate-700 hover:bg-slate-100 md:hidden"
           aria-label="Toggle menu"
+          type="button"
         >
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -136,6 +143,22 @@ const Navbar = () => {
                   onClick={() => setMobileOpen(false)}
                 >
                   Dashboard
+                </NavLink>
+
+                {/* Profile */}
+                <NavLink
+                  to="/profile"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 border-b border-slate-100 py-3 text-sm font-medium ${
+                      isActive
+                        ? "text-blue-600"
+                        : "text-slate-600 hover:text-blue-600"
+                    }`
+                  }
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <UserCircle size={17} />
+                  Profile
                 </NavLink>
 
                 <NavLink
@@ -176,6 +199,7 @@ const Navbar = () => {
                   </Link>
 
                   <button
+                    type="button"
                     onClick={() => {
                       logout();
                       setMobileOpen(false);
