@@ -10,6 +10,7 @@ import Login from "./pages/auth/Login.jsx";
 import Signup from "./pages/auth/Signup.jsx";
 import ForgotPassword from "./pages/auth/ForgotPassword.jsx";
 import ResetPassword from "./pages/auth/ResetPassword.jsx";
+import VerifyEmail from "./pages/auth/VerifyEmail.jsx";
 
 import Dashboard from "./pages/user/Dashboard.jsx";
 import AskAI from "./pages/user/AskAI.jsx";
@@ -29,9 +30,9 @@ function App() {
 
       <main className="flex-1">
         <Routes>
-          {/* =========================
-              PUBLIC ROUTES
-          ========================== */}
+          {/* ======================================
+              PUBLIC
+          ======================================= */}
 
           <Route path="/" element={<Home />} />
 
@@ -40,23 +41,26 @@ function App() {
           <Route path="/contact" element={<Contact />} />
 
           <Route path="/privacy" element={<Privacy />} />
+
           <Route path="/terms" element={<Terms />} />
 
-          {/* =========================
-              AUTH ROUTES
-          ========================== */}
+          {/* ======================================
+              AUTH
+          ======================================= */}
 
           <Route path="/login" element={<Login />} />
 
           <Route path="/signup" element={<Signup />} />
 
+          <Route path="/verify-email" element={<VerifyEmail />} />
+
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-          {/* =========================
-              PROTECTED ROUTES
-          ========================== */}
+          {/* ======================================
+              PROTECTED
+          ======================================= */}
 
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
@@ -72,9 +76,9 @@ function App() {
             <Route path="/profile" element={<Profile />} />
           </Route>
 
-          {/* =========================
+          {/* ======================================
               404
-          ========================== */}
+          ======================================= */}
 
           <Route
             path="*"
