@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <meta name="google-adsense-account" content="ca-pub-6418319485259793" />
 
     <!-- ==============================
@@ -37,10 +38,22 @@
     <meta http-equiv="content-language" content="en" />
 
     <!-- ==============================
-         THEME
+         PWA / MOBILE APP
     =============================== -->
 
+    <link rel="manifest" href="/manifest.webmanifest" />
+
     <meta name="theme-color" content="#2563eb" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <meta name="apple-mobile-web-app-title" content="Ask Me Something" />
+
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
     <!-- ==============================
          OPEN GRAPH
@@ -92,7 +105,9 @@
 
     <meta name="format-detection" content="telephone=no" />
 
-    <!-- Your existing styles/scripts -->
+    <!-- ==============================
+         GOOGLE ADSENSE
+    =============================== -->
 
     <script
       async
@@ -104,20 +119,30 @@
   <body>
     <div id="root"></div>
 
-    <!-- Google tag (gtag.js) -->
+    <!-- ==============================
+         GOOGLE ANALYTICS
+    =============================== -->
+
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-EM7LMXD17N"
     ></script>
+
     <script>
       window.dataLayer = window.dataLayer || [];
+
       function gtag() {
         dataLayer.push(arguments);
       }
+
       gtag("js", new Date());
 
       gtag("config", "G-EM7LMXD17N");
     </script>
+
+    <!-- ==============================
+         REACT
+    =============================== -->
 
     <script type="module" src="/src/main.jsx"></script>
   </body>

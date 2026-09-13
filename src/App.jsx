@@ -22,6 +22,7 @@ import Profile from "./pages/user/Profile.jsx";
 import Navbar from "./components/layout/Navbar.jsx";
 import Footer from "./components/layout/Footer.jsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
+import AppDownload from "./components/layout/AppDownload.jsx";
 
 function App() {
   return (
@@ -96,6 +97,12 @@ function App() {
           />
         </Routes>
       </main>
+
+      {/* ======================================
+          APP DOWNLOAD / INSTALL
+      ======================================= */}
+
+      <AppDownload />
 
       <Footer />
     </div>
