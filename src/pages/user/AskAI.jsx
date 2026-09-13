@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
-import { Image, Loader2, MessageSquare, Mic, Sparkles, X } from "lucide-react";
+import {
+  ChevronDown,
+  Image,
+  Loader2,
+  MessageSquare,
+  Mic,
+  Plus,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import CategoryCard from "../../components/category/CategoryCard.jsx";
 import ImageQuestion from "../../components/question/ImageQuestion.jsx";
 import VoiceQuestion from "../../components/question/VoiceQuestion.jsx";
 
@@ -38,12 +46,14 @@ const AskAI = () => {
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categoryOpen, setCategoryOpen] = useState(false);
 
   // ==========================================
   // QUESTION TYPE
   // ==========================================
 
   const [questionType, setQuestionType] = useState("text");
+  const [questionTypeOpen, setQuestionTypeOpen] = useState(false);
 
   // ==========================================
   // TEXT QUESTION
@@ -89,7 +99,6 @@ const AskAI = () => {
 
   const [showAd, setShowAd] = useState(false);
 
-  // Question that should open after advertisement
   const [pendingAnswerId, setPendingAnswerId] = useState(null);
 
   // ==========================================
@@ -119,26 +128,15 @@ const AskAI = () => {
       console.log("Answer ID:", answerId);
       console.log("================================");
 
-      // ========================================
-      // SHOW AD AFTER 5 QUESTIONS
-      // ========================================
-
       if (newCount >= QUESTION_LIMIT_BEFORE_AD) {
         console.log("5 QUESTIONS COMPLETED");
         console.log("SHOWING ADVERTISEMENT");
 
-        // Save answer ID so we can navigate after ad
         setPendingAnswerId(answerId);
-
         setShowAd(true);
 
-        // Reset counter
         return 0;
       }
-
-      // ========================================
-      // NO AD
-      // ========================================
 
       navigate(`/answer/${answerId}`);
 
@@ -214,12 +212,17 @@ const AskAI = () => {
     },
   ];
 
+  const selectedQuestionType = questionTypes.find(
+    (type) => type.id === questionType,
+  );
+
   // ==========================================
   // CHANGE QUESTION TYPE
   // ==========================================
 
   const handleQuestionTypeChange = (type) => {
     setQuestionType(type);
+    setQuestionTypeOpen(false);
     setSubmitError("");
   };
 
@@ -377,7 +380,7 @@ const AskAI = () => {
 
   return (
     <>
-      <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
         {/* ======================================
             HEADER
         ====================================== */}
@@ -398,7 +401,7 @@ const AskAI = () => {
         </div>
 
         {/* ======================================
-            CATEGORIES
+            1. CHOOSE TOPIC
         ====================================== */}
 
         <div className="mt-12">
@@ -413,7 +416,7 @@ const AskAI = () => {
           </div>
 
           {loadingCategories ? (
-            <div className="flex min-h-40 items-center justify-center rounded-2xl border border-slate-200 bg-white">
+            <div className="flex min-h-20 items-center justify-center rounded-2xl border border-slate-200 bg-white">
               <div className="flex items-center gap-3 text-slate-500">
                 <Loader2 size={20} className="animate-spin" />
                 Loading topics...
@@ -428,27 +431,105 @@ const AskAI = () => {
               No topics are available right now.
             </div>
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {categories.map((category) => (
-                <CategoryCard
-                  key={category._id}
-                  category={category}
-                  selected={selectedCategory?._id === category._id}
-                  onClick={() => {
-                    setSelectedCategory(category);
-                    setSubmitError("");
-                  }}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setCategoryOpen((current) => !current);
+                  setQuestionTypeOpen(false);
+                }}
+                disabled={submitting}
+                className="flex w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-5 py-4 text-left shadow-sm transition hover:border-blue-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <div className="flex items-center gap-3">
+                  {selectedCategory ? (
+                    <>
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-xl">
+                        {selectedCategory.icon}
+                      </span>
+
+                      <div>
+                        <p className="font-semibold text-slate-900">
+                          {selectedCategory.name}
+                        </p>
+
+                        <p className="text-sm text-slate-500">Selected topic</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
+                        ?
+                      </span>
+
+                      <div>
+                        <p className="font-semibold text-slate-900">
+                          Choose a topic
+                        </p>
+
+                        <p className="text-sm text-slate-500">
+                          Select the topic for your question
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <ChevronDown
+                  size={21}
+                  className={`text-slate-500 transition-transform ${
+                    categoryOpen ? "rotate-180" : ""
+                  }`}
                 />
-              ))}
+              </button>
+
+              {categoryOpen && (
+                <div className="absolute left-0 right-0 top-full z-30 mt-2 max-h-80 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                  {categories.map((category) => {
+                    const selected = selectedCategory?._id === category._id;
+
+                    return (
+                      <button
+                        key={category._id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedCategory(category);
+                          setCategoryOpen(false);
+                          setSubmitError("");
+                        }}
+                        className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition ${
+                          selected
+                            ? "bg-blue-50 text-blue-700"
+                            : "text-slate-700 hover:bg-slate-50"
+                        }`}
+                      >
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-lg">
+                          {category.icon}
+                        </span>
+
+                        <span className="flex-1 font-medium">
+                          {category.name}
+                        </span>
+
+                        {selected && (
+                          <span className="text-sm font-semibold text-blue-600">
+                            Selected
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
         </div>
 
         {/* ======================================
-            QUESTION METHOD
+            2. QUESTION METHOD
         ====================================== */}
 
-        <div className="mt-12">
+        <div className="mt-10">
           <div className="mb-5">
             <h2 className="text-xl font-bold text-slate-900">
               2. How would you like to ask?
@@ -459,51 +540,93 @@ const AskAI = () => {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            {questionTypes.map((type) => {
-              const Icon = type.icon;
-              const selected = questionType === type.id;
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => {
+                setQuestionTypeOpen((current) => !current);
+                setCategoryOpen(false);
+              }}
+              disabled={submitting}
+              className="flex w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-5 py-4 text-left shadow-sm transition hover:border-blue-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                  <Plus size={21} />
+                </div>
 
-              return (
-                <button
-                  key={type.id}
-                  type="button"
-                  onClick={() => handleQuestionTypeChange(type.id)}
-                  disabled={submitting}
-                  className={`rounded-2xl border p-5 text-left transition ${
-                    selected
-                      ? "border-blue-500 bg-blue-50 ring-2 ring-blue-100"
-                      : "border-slate-200 bg-white hover:border-blue-300"
-                  } ${submitting ? "cursor-not-allowed opacity-60" : ""}`}
-                >
-                  <div
-                    className={`flex h-11 w-11 items-center justify-center rounded-xl ${
-                      selected
-                        ? "bg-blue-600 text-white"
-                        : "bg-slate-100 text-slate-600"
-                    }`}
-                  >
-                    <Icon size={21} />
-                  </div>
-
-                  <h3 className="mt-4 font-bold text-slate-900">
-                    {type.title}
-                  </h3>
-
-                  <p className="mt-1 text-sm text-slate-500">
-                    {type.description}
+                <div>
+                  <p className="font-semibold text-slate-900">
+                    Add question method
                   </p>
-                </button>
-              );
-            })}
+
+                  <p className="text-sm text-slate-500">
+                    {selectedQuestionType?.title} is currently selected
+                  </p>
+                </div>
+              </div>
+
+              <ChevronDown
+                size={21}
+                className={`text-slate-500 transition-transform ${
+                  questionTypeOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {questionTypeOpen && (
+              <div className="absolute left-0 right-0 top-full z-30 mt-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                {questionTypes.map((type) => {
+                  const Icon = type.icon;
+                  const selected = questionType === type.id;
+
+                  return (
+                    <button
+                      key={type.id}
+                      type="button"
+                      onClick={() => handleQuestionTypeChange(type.id)}
+                      className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition ${
+                        selected ? "bg-blue-50" : "hover:bg-slate-50"
+                      }`}
+                    >
+                      <div
+                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                          selected
+                            ? "bg-blue-600 text-white"
+                            : "bg-slate-100 text-slate-600"
+                        }`}
+                      >
+                        <Icon size={20} />
+                      </div>
+
+                      <div className="flex-1">
+                        <p className="font-semibold text-slate-900">
+                          {type.title}
+                        </p>
+
+                        <p className="text-sm text-slate-500">
+                          {type.description}
+                        </p>
+                      </div>
+
+                      {selected && (
+                        <span className="text-sm font-semibold text-blue-600">
+                          Selected
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 
         {/* ======================================
-            ASK QUESTION
+            3. ASK QUESTION
         ====================================== */}
 
-        <div className="mt-12">
+        <div className="mt-10">
           <div className="mb-5">
             <h2 className="text-xl font-bold text-slate-900">
               3. Ask your question
@@ -523,6 +646,18 @@ const AskAI = () => {
               </div>
             )}
 
+            {/* SELECTED TOPIC */}
+
+            {selectedCategory && (
+              <div className="mb-5 flex items-center gap-2 text-sm text-slate-500">
+                <span>Topic:</span>
+
+                <span className="font-semibold text-slate-700">
+                  {selectedCategory.icon} {selectedCategory.name}
+                </span>
+              </div>
+            )}
+
             {/* TEXT */}
 
             {questionType === "text" && (
@@ -538,16 +673,9 @@ const AskAI = () => {
 
                 <div className="mt-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                   <div className="text-sm text-slate-500">
-                    {selectedCategory ? (
-                      <>
-                        Topic:{" "}
-                        <span className="font-semibold text-slate-700">
-                          {selectedCategory.icon} {selectedCategory.name}
-                        </span>
-                      </>
-                    ) : (
-                      "Choose a topic above"
-                    )}
+                    {selectedCategory
+                      ? "Ready to answer your question."
+                      : "Choose a topic above."}
                   </div>
 
                   <button
@@ -606,8 +734,6 @@ const AskAI = () => {
       {showAd && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 px-4">
           <div className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
-            {/* CLOSE */}
-
             <button
               type="button"
               onClick={handleCloseAd}
@@ -616,8 +742,6 @@ const AskAI = () => {
             >
               <X size={20} />
             </button>
-
-            {/* CONTENT */}
 
             <div className="pt-4 text-center">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-500">
@@ -628,10 +752,6 @@ const AskAI = () => {
                 Advertisement
               </p>
 
-              {/* ==================================
-                  ADVERTISEMENT AREA
-              ================================== */}
-
               <div className="mt-4 flex min-h-48 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50">
                 <div className="text-center">
                   <p className="font-semibold text-slate-700">Ad Space</p>
@@ -641,8 +761,6 @@ const AskAI = () => {
                   </p>
                 </div>
               </div>
-
-              {/* CONTINUE */}
 
               <button
                 type="button"
