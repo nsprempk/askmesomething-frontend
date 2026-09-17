@@ -7,6 +7,7 @@ const Privacy = () => {
         title="Privacy Policy"
         description="Read the Privacy Policy for Ask Me Something and learn how we handle account information, questions, images, voice recordings, AI processing, cookies, analytics, and advertising."
         keywords="Ask Me Something privacy policy, AI privacy policy, user data, AI questions privacy, data protection"
+        canonical="https://askmesomething.site/privacy"
       />
 
       <section className="mx-auto max-w-4xl px-4 py-20 sm:px-6">

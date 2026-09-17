@@ -7,6 +7,7 @@ const Terms = () => {
         title="Terms & Conditions"
         description="Read the Terms & Conditions for using Ask Me Something, including rules for using our AI-powered question answering services."
         keywords="Ask Me Something terms and conditions, AI terms of service, terms of use"
+        canonical="https://askmesomething.site/terms"
       />
 
       <section className="mx-auto max-w-4xl px-4 py-20 sm:px-6">

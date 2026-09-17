@@ -7,6 +7,7 @@ const About = () => {
         title="About Ask Me Something"
         description="Learn about Ask Me Something, an AI-powered question answering platform that helps users get useful answers through text, images, and voice."
         keywords="about Ask Me Something, AI question answering, AI assistant, ask AI, AI learning platform"
+        canonical="https://askmesomething.site/about"
       />
 
       <section className="mx-auto max-w-4xl px-4 py-20 sm:px-6">

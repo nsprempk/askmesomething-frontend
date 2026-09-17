@@ -8,6 +8,7 @@ const Contact = () => {
         title="Contact Us"
         description="Contact Ask Me Something for questions, suggestions, feedback, or support. Get in touch with the Ask Me Something team at support@askmesomething.site."
         keywords="contact Ask Me Something, Ask Me Something support, AI support, AI question answering support"
+        canonical="https://askmesomething.site/contact"
       />
 
       <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
