@@ -119,7 +119,7 @@ const Answer = () => {
           </h2>
 
           <p className="mt-2 text-sm text-slate-500">
-            This question may have been deleted or is no longer available.
+            This question may have been deleted or is no longer available here.
           </p>
 
           <Link
